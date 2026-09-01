@@ -17,12 +17,12 @@
 
 | Functional Block Diagram | 2D Occupancy Grid Map | Nav2 Costmap & AMCL Localization |
 | :---: | :---: | :---: |
-| ![System FBD](assets/project_fbd.png) | ![Occupancy Map](assets/system_map.png) | ![Costmap AMCL](assets/amcl_costmap_nav.png) |
+| ![System FBD](assets/project_fbd.png) | ![Occupancy Map](assets/system_map.png) | ![Costmap AMCL](assets/mapping_nav.png) |
 | *Multi-node ROS 2 messaging architecture*[cite: 1] | *Cartographer SLAM generated map (`map.yaml`)*[cite: 1] | *Costmap inflation layers & AMCL particle filter swarm*[cite: 1] |
 
 | Target Inventory Blocks | Live Dashboard & Telemetry Results |
 | :---: | :---: |
-| ![Blocks to Detect](assets/blocks_to_detect.png) | ![Dashboard Results](assets/dashboard_results.png) |
+| ![Blocks to Detect](assets/blocks_to_detect.png) | ![Dashboard Results](assets/dashboard_results.jpg) |
 | *Target color-coded payload blocks*[cite: 1] | *Live Tkinter GUI with shelf totals & misplaced item alerts*[cite: 1] |
 
 ---
