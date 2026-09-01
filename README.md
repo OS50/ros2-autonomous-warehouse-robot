@@ -8,7 +8,7 @@
 
 > An autonomous robotic inspection system engineered on **ROS 2 Humble** and a **TurtleBot3 Burger**. Integrates Cartographer SLAM, Nav2 waypoint navigation, real-time HSV color segmentation via OpenCV, and a multi-threaded Tkinter operator dashboard to automate inventory tracking and detect misplaced warehouse stock.
 
-📄 **[Read the Full Technical Report (PDF)](docs/ECTE477 Project Report.pdf)**
+📄 **[Read the Full Technical Report (PDF)](docs/ECTE477_Project_Report.pdf)**
 
 ---
 
