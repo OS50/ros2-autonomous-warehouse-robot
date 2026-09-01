@@ -15,21 +15,21 @@
 
 ## 🎬 System Demos & Visuals
 
-| Functional Block Diagram | 2D Occupancy Grid Map |
-| :---: | :---: |
-| ![System FBD](assets/project_fbd.png) | ![Occupancy Map](assets/system_map.png) |
-| *Multi-node ROS 2 messaging architecture* | *Cartographer SLAM generated map (`map.yaml`)*[cite: 1] |
+| Functional Block Diagram | 2D Occupancy Grid Map | Nav2 Costmap & AMCL Localization |
+| :---: | :---: | :---: |
+| ![System FBD](assets/project_fbd.png) | ![Occupancy Map](assets/system_map.png) | ![Costmap AMCL](assets/amcl_costmap_nav.png) |
+| *Multi-node ROS 2 messaging architecture*[cite: 1] | *Cartographer SLAM generated map (`map.yaml`)*[cite: 1] | *Costmap inflation layers & AMCL particle filter swarm*[cite: 1] |
 
-| Computer Vision Bounding Boxes | Real-Time Navigation (RViz) |
+| Target Inventory Blocks | Live Dashboard & Telemetry Results |
 | :---: | :---: |
-| ![HSV Contour Extraction](assets/block_detection_demo.png) | ![RViz Localization](assets/rviz_nav_run.png) |
-| *Morphological filtering & HSV contour detection*[cite: 1] | *AMCL particle filter pose estimation & path planning*[cite: 1] |
+| ![Blocks to Detect](assets/blocks_to_detect.png) | ![Dashboard Results](assets/dashboard_results.png) |
+| *Target color-coded payload blocks*[cite: 1] | *Live Tkinter GUI with shelf totals & misplaced item alerts*[cite: 1] |
 
 ---
 
 ## 🏗️ System Architecture & Node Communication
 
-The system is decoupled into three modular sub-systems communicating via ROS 2 topics, action servers, and local sockets:
+The system is decoupled into three modular sub-systems communicating via ROS 2 topics, action servers, and local sockets[cite: 1]:
 
 ```mermaid
 flowchart TD
@@ -39,7 +39,7 @@ flowchart TD
     end
 
     subgraph Perception Pipeline
-        D -->|HSV Thresholding & Contours| D1[Bounding Box Extraction]
+        D -->|HSV Thresholding & Contours| D1[Color Block Counting]
         D1 -->|/shelf_colors| E
     end
 
@@ -59,7 +59,8 @@ flowchart TD
 ## ⚡ Key System Features
 
 * **Autonomous Waypoint Navigation:** Dispatches goal poses to the **Nav2 Action Server** using coordinates mapped via Cartographer SLAM and verified against `/amcl_pose`[cite: 1].
-* **Real-Time Color Segmentation & Contouring:** Subscribes to `/camera/image_raw/compressed`, applies calibrated HSV ranges across 5 color bands (Yellow, Lime, Green, Purple, Blue), and executes morphological opening operations to isolate block counts[cite: 1].
+* **Real-Time Color Segmentation & Contouring:** Subscribes to `/camera/image_raw/compressed`, applies calibrated HSV ranges across 5 color bands (Yellow, Lime, Green, Purple, Blue), and executes morphological opening operations to isolate and count inventory blocks[cite: 1].
+* **Costmap-Aware Obstacle Clearance:** Utilizes local and global inflation costmaps with AMCL particle-filter state estimation to dynamically navigate tight warehouse corridors without collisions[cite: 1].
 * **Synchronized Inspection Hold:** Implements an automated 10-second stabilization hold state at each shelf waypoint to settle camera motion blur and ensure reliable perception aggregation before continuing the route[cite: 1].
 * **Live Telemetry & Diagnostics GUI:** Multi-threaded **Tkinter** dashboard showing real-time shelf status cards, active robot coordinates, target navigation goals, and misplaced item alerts[cite: 1].
 
@@ -69,7 +70,7 @@ flowchart TD
 
 ### 1. `inventory_control` (Core Application Package)[cite: 1]
 * **`motion_control.py`**: Central state coordinator[cite: 1]. Manages the waypoint queue, interfaces with the Nav2 action client, processes `/shelf_colors` message payloads, and pushes live updates into the GUI[cite: 1].
-* **`shelf_color_detector.py`**: OpenCV perception pipeline[cite: 1]. Performs color masking, noise removal, and contour bounding-box drawing, publishing structured item counts to `/shelf_colors`[cite: 1].
+* **`shelf_color_detector.py`**: OpenCV perception pipeline[cite: 1]. Performs color masking, noise removal, and contouring, publishing structured item counts to `/shelf_colors`[cite: 1].
 * **`dashboard.py`**: Operator interface displaying live status cards for each shelf (Green, Purple, Yellow), active robot coordinates $(x, y, w)$, target goals, and total misplaced item counts[cite: 1].
 
 ### 2. `oas_pkg` (Hardware Integration & Support Nodes)
@@ -101,13 +102,13 @@ ros2 launch turtlebot3_bringup robot.launch.py
 ros2 launch camera_ros camera.launch.py
 ```
 
-### 2. Launch Navigation on Host PC
+### 2. Launch Navigation on Host PC[cite: 1]
 ```bash
 # Launch Nav2 with the generated occupancy grid
 ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=/path/to/maps/map2.yaml
 ```
 
-### 3. Build & Run Inventory Pipeline
+### 3. Build & Run Inventory Pipeline[cite: 1]
 ```bash
 # Clone and build package
 cd ~/turtlebot3_ws
